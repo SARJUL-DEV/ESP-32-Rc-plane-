@@ -1,142 +1,137 @@
-#✈️ ESP32 Smart Plane Controller (SARJUL DEV)
+✈️ ESP32 Smart Plane Controller (SARJUL DEV)
 
-A powerful ESP32-based dual motor plane control system with real-time web controller, gyro stabilization, and multi-touch joystick support.
+This project is a smart dual-motor plane control system built using ESP32 and MPU6050.
+It provides real-time control through a mobile browser with a smooth joystick interface and built-in stabilization.
 
 ---
 
 🚀 Features
 
-- 🎮 Dual Virtual Joystick (Mobile Control)
-- ✌️ Multi-touch Support (2 Finger Control)
-- 🧠 Gyro Stabilization (MPU6050)
-- 🔘 Manual ON/OFF Stabilization
-- 🚨 Flip Protection System
-- 📡 Real-time Web Control (No App Required)
-- ⚡ Smooth Motor Control (PWM)
-- ✍️ Built-in Watermark (SARJUL DEV)
+- Dual joystick control (mobile friendly)
+- Multi-touch support (control both motors at the same time)
+- Gyro stabilization (left-right balance using MPU6050)
+- Manual ON/OFF stabilization button
+- Flip protection system
+- Real-time web control (no app needed)
+- Smooth PWM motor control
+- Built-in watermark (SARJUL DEV)
 
 ---
 
-📦 Components Required
+🔧 Components Required
 
-Component| Quantity
-ESP32 Board| 1
-MPU6050 Gyroscope| 1
-DC Motors| 2
-MOSFET (IRFZ44N / IRLZ44N Recommended)| 2
-Flyback Diode (1N4007)| 2
-External Battery (7.4V / 11.1V LiPo Recommended)| 1
-Jumper Wires| As needed
-
----
-
-🔌 Wiring Diagram
-
-🧠 MPU6050 → ESP32
-
-MPU6050| ESP32
-VCC| 3.3V
-GND| GND
-SDA| GPIO 21
-SCL| GPIO 22
+- ESP32 development board
+- MPU6050 gyroscope module
+- 2 × DC motors
+- 2 × MOSFET (IRLZ44N recommended)
+- 2 × flyback diode (1N4007)
+- LiPo battery (7.4V or 11.1V recommended)
+- Jumper wires
 
 ---
 
-⚡ Motor + MOSFET Connection
+🔌 Connections
 
-For EACH Motor:
+MPU6050 to ESP32
 
-- Motor + → Battery +
-- Motor - → MOSFET Drain
+- VCC → 3.3V
+- GND → GND
+- SDA → GPIO 21
+- SCL → GPIO 22
+
+---
+
+Motors using MOSFET
+
+For each motor:
+
+- Motor positive → Battery positive
+- Motor negative → MOSFET Drain
 - MOSFET Source → GND
-- MOSFET Gate → ESP32 GPIO
+- MOSFET Gate → ESP32 pin
 
-Motor| ESP32 Pin
-Left Motor| GPIO 25
-Right Motor| GPIO 26
-
----
-
-🔥 Flyback Diode (IMPORTANT)
-
-- Diode across motor terminals
-- Stripe side → Battery +
-- Other side → Motor -
+Left motor → GPIO 25
+Right motor → GPIO 26
 
 ---
 
-📡 How It Works
+Flyback Diode (Important)
 
-1. ESP32 creates WiFi:
-   
-   SSID: ESP32-PLANE
+- Connect across motor terminals
+- Stripe side → Battery positive
+- Other side → Motor negative
+
+---
+
+📡 Usage
+
+1. Upload the code to ESP32
+2. Turn on the device
+3. Connect your phone to WiFi:
+
+ESP32-PLANE
 Password: 12345678
 
-2. Connect your phone to this WiFi
+4. Open browser and go to:
 
-3. Open browser and go to:
-   
-   http://192.168.4.1
+http://192.168.4.1
 
-4. Control using dual joysticks
+5. Control the plane using joysticks
 
 ---
 
 🎮 Controls
 
-Action| Result
-Both Joystick Up| Move Forward
-Left ↑ Right ↓| Turn Right
-Right ↑ Left ↓| Turn Left
-Release| Stop
+- Both joysticks up → forward
+- Left high + right low → turn right
+- Right high + left low → turn left
+- Release → motors stop
 
 ---
 
-🧠 Gyro Stabilization
+🧠 Stabilization
 
-- Default: OFF
-- Enable from top-right button
-- Automatically:
-  - Balances left-right tilt
-  - Prevents flipping
-  - Assists control
+- Default is OFF
+- Turn ON using button on top-right
+- Automatically balances left-right tilt
+- Prevents sudden flipping
 
 ---
 
-⚠️ Safety Tips
+⚠️ Safety
 
-- Always test at LOW speed first
+- Always test at low speed first
 - Use proper battery (LiPo recommended)
-- Never connect motor directly to ESP32
-- Always use MOSFET
+- Never power motors directly from ESP32
+- Always use MOSFET for motors
 
 ---
 
 🔥 Troubleshooting
 
-❌ Motor not working
+Motor not working
 
 - Check MOSFET wiring
-- Check battery voltage
+- Check battery
 
-❌ Gyro not working
+Gyro not working
 
-- Check SDA/SCL connections
-- Ensure MPU6050 initialized
+- Check SDA and SCL pins
+- Make sure MPU6050 is connected properly
 
-❌ Web UI not loading
+Web page not opening
 
-- Confirm WiFi connection
-- Open "192.168.4.1"
+- Make sure you are connected to ESP32 WiFi
+- Open 192.168.4.1
 
 ---
 
-💡 Future Upgrades
+💡 Future Ideas
 
-- PID Stabilization
-- Auto Straight Flight Mode
-- Compass (Heading Lock)
-- Mobile App Version
+- PID stabilization
+- Auto straight flight mode
+- Compass integration
+- Mobile app version
 
 ---
 
@@ -148,12 +143,8 @@ SARJUL DEV
 
 ⭐ Support
 
-If you like this project:
-
-- ⭐ Star the repo
-- 🔁 Share with others
-- 💬 Give feedback
+If you like this project, consider starring the repository and sharing it.
 
 ---
 
-🔥 Built with passion by SARJUL DEV
+Built with passion by SARJUL DEV
