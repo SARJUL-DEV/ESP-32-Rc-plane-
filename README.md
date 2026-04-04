@@ -1,150 +1,185 @@
-✈️ ESP32 Smart Plane Controller (SARJUL DEV)
+✈️ ESP Smart Plane System (NRF Controller + Receiver)
 
-This project is a smart dual-motor plane control system built using ESP32 and MPU6050.
-It provides real-time control through a mobile browser with a smooth joystick interface and built-in stabilization.
+By SARJUL DEV
 
----
+This project uses NRF24L01 wireless communication for fast and stable control.
 
-🚀 Features
-
-- Dual joystick control (mobile friendly)
-- Multi-touch support (control both motors at the same time)
-- Gyro stabilization (left-right balance using MPU6050)
-- Manual ON/OFF stabilization button
-- Flip protection system
-- Real-time web control (no app needed)
-- Smooth PWM motor control
-- Built-in watermark (SARJUL DEV)
+Controller → ESP8266 + NRF24L01
+Receiver → ESP32 + NRF24L01 + MPU6050 + Motors
 
 ---
 
-🔧 Components Required
+🧠 SYSTEM FLOW
 
-- ESP32 development board
-- MPU6050 gyroscope module
-- 2 × DC motors
-- 2 × MOSFET (IRLZ44N recommended)
-- 2 × flyback diode (1N4007)
-- LiPo battery (7.4V or 11.1V recommended)
-- Jumper wires
-
----
-
-🔌 Connections
-
-MPU6050 to ESP32
-
-- VCC → 3.3V
-- GND → GND
-- SDA → GPIO 21
-- SCL → GPIO 22
+[ Mobile Phone ]
+        ↓ WiFi
+[ ESP8266 Controller ]
+        ↓ NRF24 Signal
+[ ESP32 Receiver ]
+        ↓
+[ Motors + Gyro Control ]
 
 ---
 
-Motors using MOSFET
-
-For each motor:
-
-- Motor positive → Battery positive
-- Motor negative → MOSFET Drain
-- MOSFET Source → GND
-- MOSFET Gate → ESP32 pin
-
-Left motor → GPIO 25
-Right motor → GPIO 26
+🎮 CONTROLLER (ESP8266 + NRF24L01)
 
 ---
 
-Flyback Diode (Important)
+🔌 NRF24L01 → ESP8266 Wiring
 
-- Connect across motor terminals
-- Stripe side → Battery positive
-- Other side → Motor negative
+        NRF24L01        ESP8266 (NodeMCU)
 
----
+        +--------+      +------------------+
+        | VCC    | ---> | 3.3V ⚠️          |
+        | GND    | ---> | GND              |
+        | CE     | ---> | D2 (GPIO4)       |
+        | CSN    | ---> | D8 (GPIO15)      |
+        | SCK    | ---> | D5 (GPIO14)      |
+        | MOSI   | ---> | D7 (GPIO13)      |
+        | MISO   | ---> | D6 (GPIO12)      |
+        +--------+      +------------------+
 
-📡 Usage
+⚠️ IMPORTANT:
 
-1. Upload the code to ESP32
-2. Turn on the device
-3. Connect your phone to WiFi:
-
-ESP32-PLANE
-Password: 12345678
-
-4. Open browser and go to:
-
-http://192.168.4.1
-
-5. Control the plane using joysticks
+- NEVER connect NRF to 5V
+- Use stable 3.3V (recommended capacitor 10µF)
 
 ---
 
-🎮 Controls
-
-- Both joysticks up → forward
-- Left high + right low → turn right
-- Right high + left low → turn left
-- Release → motors stop
+🛩️ RECEIVER (ESP32 + NRF24L01 + MPU6050)
 
 ---
 
-🧠 Stabilization
+🔌 NRF24L01 → ESP32 Wiring
 
-- Default is OFF
-- Turn ON using button on top-right
-- Automatically balances left-right tilt
-- Prevents sudden flipping
+        NRF24L01        ESP32
 
----
-
-⚠️ Safety
-
-- Always test at low speed first
-- Use proper battery (LiPo recommended)
-- Never power motors directly from ESP32
-- Always use MOSFET for motors
+        +--------+      +------------------+
+        | VCC    | ---> | 3.3V ⚠️          |
+        | GND    | ---> | GND              |
+        | CE     | ---> | GPIO 4           |
+        | CSN    | ---> | GPIO 5           |
+        | SCK    | ---> | GPIO 18          |
+        | MOSI   | ---> | GPIO 23          |
+        | MISO   | ---> | GPIO 19          |
+        +--------+      +------------------+
 
 ---
 
-🔥 Troubleshooting
+🔌 MPU6050 → ESP32
 
-Motor not working
+MPU6050        ESP32
 
-- Check MOSFET wiring
-- Check battery
-
-Gyro not working
-
-- Check SDA and SCL pins
-- Make sure MPU6050 is connected properly
-
-Web page not opening
-
-- Make sure you are connected to ESP32 WiFi
-- Open 192.168.4.1
+VCC    ------> 3.3V  
+GND    ------> GND  
+SDA    ------> GPIO21  
+SCL    ------> GPIO22  
 
 ---
 
-💡 Future Ideas
+⚡ MOTOR + MOSFET CONNECTION
 
-- PID stabilization
-- Auto straight flight mode
-- Compass integration
-- Mobile app version
+LEFT MOTOR
+
+Battery (+) ---- Motor (+)
+Motor (-) ------ Drain (MOSFET)
+Source --------- GND
+Gate ----------- GPIO 25
 
 ---
 
-👨‍💻 Author
+RIGHT MOTOR
+
+Battery (+) ---- Motor (+)
+Motor (-) ------ Drain (MOSFET)
+Source --------- GND
+Gate ----------- GPIO 26
+
+---
+
+🔥 FLYBACK DIODE
+
+     Motor
+
+   + -----------+
+   |           |
+   |   MOTOR   |
+   |           |
+   +-----------+
+
+Diode:
+Stripe → Battery +
+Other → Motor -
+
+---
+
+🧠 FULL RECEIVER DIAGRAM
+
+              [ ESP32 ]
+
+     GPIO25 -------- MOSFET -------- Motor L
+     GPIO26 -------- MOSFET -------- Motor R
+
+     GPIO4  -------- CE (NRF)
+     GPIO5  -------- CSN (NRF)
+     GPIO18 -------- SCK
+     GPIO23 -------- MOSI
+     GPIO19 -------- MISO
+
+     GPIO21 -------- SDA (MPU6050)
+     GPIO22 -------- SCL (MPU6050)
+
+     3.3V -------- VCC (NRF + MPU6050)
+     GND  -------- GND (ALL)
+
+         Battery → Motors
+
+---
+
+📡 HOW SYSTEM WORKS
+
+1. ESP8266 reads joystick input (web UI)
+2. Sends data via NRF24L01
+3. ESP32 receives data
+4. Controls motors + stabilization
+
+---
+
+⚠️ IMPORTANT RULES
+
+- NRF MUST use 3.3V only
+- Add capacitor (10µF) across VCC & GND (NRF)
+- Keep wires short
+- Use proper battery for motors
+
+---
+
+🔥 COMMON ISSUES
+
+NRF not connecting
+→ Check CE/CSN pins
+
+Random disconnect
+→ Add capacitor
+
+No motor response
+→ Check MOSFET wiring
+
+---
+
+💯 FINAL RESULT
+
+- Ultra fast control (NRF)
+- No WiFi lag
+- Stable flight
+- Long range control
+
+---
+
+👨‍💻 AUTHOR
 
 SARJUL DEV
 
 ---
 
-⭐ Support
-
-If you like this project, consider starring the repository and sharing it.
-
----
-
-Built with passion by SARJUL DEV
+🔥 Built for high-performance wireless control
