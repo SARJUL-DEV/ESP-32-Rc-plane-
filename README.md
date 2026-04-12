@@ -33,7 +33,7 @@ Receiver → ESP32 + NRF24L01 + MPU6050 + Motors
         | VCC    | ---> | 3.3V ⚠️          |
         | GND    | ---> | GND              |
         | CE     | ---> | D2 (GPIO4)       |
-        | CSN    | ---> | D8 (GPIO15)      |
+        | CSN    | ---> | D1 (GPIO15)      |
         | SCK    | ---> | D5 (GPIO14)      |
         | MOSI   | ---> | D7 (GPIO13)      |
         | MISO   | ---> | D6 (GPIO12)      |
